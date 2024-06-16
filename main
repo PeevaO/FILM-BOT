@@ -1,53 +1,133 @@
 import telebot
+import sqlalchemy as db
+import DataBase
 
+from telebot import types
 
-TOKEN = ''
+TOKEN = '7265587584:AAHDLhga1j7R4viObqfhhIP4XrW3Pdkabzg'
 bot = telebot.TeleBot(TOKEN)
-
+DATABASE = 'Serials.db'
 
 
 @bot.message_handler(commands=["start"])
 def handle_start(message):
-    bot.send_message(message.chat.id, START_MSG)
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    btn1 = types.KeyboardButton("🌸 Аниме")
+    btn2 = types.KeyboardButton("📺 Дорамы")
+    btn3 = types.KeyboardButton("❤️ Избранное")
+    btn4 = types.KeyboardButton("❓ Что я умею?")
+    markup.add(btn1, btn2, btn3, btn4 )
+    bot.send_message(message.chat.id, START_MSG, reply_markup=markup)
 
 
 @bot.message_handler(commands=["help"])
 def handle_help(message):
-    bot.send_message(message.chat.id, HELP_MSG)
+    bot.send_message(message.chat.id, GeneralMessages.HELP_MSG)
 
-@bot.message_handler(content_types = ['text'])
-def send_text(message):
-    if message.text.lower() == 'поиск по названию':
-        msg = bot.send_message(message.chat.id, 'Введи название аниме или дорамы, которые хочешь посмотреть')
-        bot.register_next_step_handler(msg,process_title_search)
-    elif message.text.lower() == 'поиск по жанру':
-        msg = bot.send_message(message.chat.id, 'Введи нужные жанры (если их несколько, то укажи их через запятую, без пробелов)')
+@bot.message_handler(content_types=['text'])
+def func(message):
+    if (message.text == "❓ Что я умею?"):
+        bot.send_message(message.chat.id, GeneralMessages.HELP_MSG)
+    elif (message.text == "🌸 Аниме"):
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        btn1 = types.KeyboardButton("Поиск аниме по названию 🔎")
+        btn2 = types.KeyboardButton("Поиск аниме по жанру 🎭")
+        btn3 = types.KeyboardButton("Поиск аниме по году 🎯")
+        btn4 = types.KeyboardButton("Случайное аниме 💡")
+        back = types.KeyboardButton("Вернуться в главное меню 📌")
+        markup.add(btn1, btn2, btn3, btn4, back)
+        bot.send_message(message.chat.id, text="Задай мне вопрос", reply_markup=markup)
+
+    elif (message.text == "📺 Дорамы"):
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        btn1 = types.KeyboardButton("Поиск дорамы по названию 🔎")
+        btn2 = types.KeyboardButton("Поиск дорамы по жанру 🎭")
+        btn3 = types.KeyboardButton("Поиск дорамы по году 🎯")
+        btn4 = types.KeyboardButton("Случайная дорама 💡")
+        btn5 = types.KeyboardButton("Поиск дорамы по актеру 💎")
+        back = types.KeyboardButton("Вернуться в главное меню 📌")
+        markup.add(btn1, btn2, btn3, btn4, btn5, back)
+        bot.send_message(message.chat.id, text="Задай мне вопрос", reply_markup=markup)
+
+    elif (message.text == "❤️ Избранное"):
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        btn1 = types.KeyboardButton("Мой список 📜")
+        btn2 = types.KeyboardButton("Добавить в Избранное 📝")
+        btn3 = types.KeyboardButton("Удалить из Избранного 🚫")
+        back = types.KeyboardButton("Вернуться в главное меню 📌")
+        markup.add(btn1, btn2, btn3, back)
+        bot.send_message(message.chat.id, text="Задай мне вопрос", reply_markup=markup)
+
+
+    elif (message.text == "Вернуться в главное меню 📌"):
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        btn1 = types.KeyboardButton("🌸 Аниме")
+        btn2 = types.KeyboardButton("📺 Дорамы")
+        btn3 = types.KeyboardButton("❓ Что я умею?")
+        markup.add(btn1, btn2, btn3)
+        bot.send_message(message.chat.id, text="Вы вернулись в главное меню", reply_markup=markup)
+
+    elif (message.text == "Поиск аниме по названию 🔎"):
+        msg = bot.send_message(message.chat.id, 'Введи название аниме, которое хочешь посмотреть')
+        bot.register_next_step_handler(msg, process_title_search)
+
+    elif (message.text == "Поиск дорамы по названию 🔎"):
+        msg = bot.send_message(message.chat.id, 'Введи название дорамы, которую хочешь посмотреть')
+        bot.register_next_step_handler(msg, process_title_search)
+
+    elif (message.text == "Поиск аниме по жанру 🎭"):
+        msg = bot.send_message(message.chat.id,
+                               'Введи нужные жанры (если их несколько, то укажи их через запятую, без пробелов)')
         bot.register_next_step_handler(msg, process_genre_search)
-    elif message.text.lower() == 'поиск по актеру':
-        msg = bot.send_message(message.chat.id,'Введи нужных актеров (если их несколько, то укажи их через запятую, без пробелов)')
+
+    elif (message.text == "Поиск дорамы по жанру 🎭"):
+        msg = bot.send_message(message.chat.id,
+                               'Введи нужные жанры (если их несколько, то укажи их через запятую, без пробелов)')
+        bot.register_next_step_handler(msg, process_genre_search)
+
+    elif (message.text == "Поиск дорамы по актеру 💎"):
+        msg = bot.send_message(message.chat.id,
+                               'Введи нужных актеров (если их несколько, то укажи их через запятую, без пробелов)')
         bot.register_next_step_handler(msg, process_actor_search)
-    elif message.text.lower() == 'поиск по году':
-        msg = bot.send_message(message.chat.id, 'Введи нужный год или диапазон годов (если вводишь диапазон, то вводи в формате год-год)')
+
+    elif (message.text == "Поиск дорамы по году 🎯"):
+        msg = bot.send_message(message.chat.id,
+                               'Введи нужный год или диапазон годов (если вводишь диапазон, то вводи в формате год-год)')
         bot.register_next_step_handler(msg, process_year_search)
-    elif message.text.lower() == 'случайный сериал':
-        msg = bot.send_message(message.chat.id, 'Держи случайный сериал, надеюсь, что тебе он понравится \n')
+
+    elif (message.text == "Поиск аниме по году 🎯"):
+        msg = bot.send_message(message.chat.id,
+                               'Введи нужный год или диапазон годов (если вводишь диапазон, то вводи в формате год-год)')
+        bot.register_next_step_handler(msg, process_year_search)
+
+    elif (message.text == "Случайная дорама 💡"):
+        msg = bot.send_message(message.chat.id, 'Держи случайную дораму, надеюсь, что тебе она понравится 😊\n')
         #information =
         bot.send_message(message.chat.id, information)
-    elif message.text.lower() == 'добавить в избранное':
+
+    elif (message.text == "Случайное аниме 💡"):
+        msg = bot.send_message(message.chat.id, 'Держи случайное аниме, надеюсь, что тебе оно понравится 😊\n')
+        #information =
+        bot.send_message(message.chat.id, information)
+
+    elif (message.text == "Добавить в Избранное 📝"):
         msg = bot.send_message(message.chat.id, 'Введи название дорамы, которую хочешь добавить в Избранное')
         bot.register_next_step_handler(msg, process_add_to_favourites)
-    elif message.text.lower() == 'избранное':
+
+    elif (message.text == "Мой список 📜"):
 
         #information =
         bot.send_message(message.chat.id, information)
 
-    elif message.text.lower() == 'удалить из избранного':
+        #except Exception as e:
+           # bot.reply_to(message, "Ваш список пуст 🥺")
+
+    elif (message.text == "🚫 Удалить из Избранного"):
         msg = bot.send_message(message.chat.id, 'Введи название сериала, которое хочешь удалить из Избранного:')
         bot.register_next_step_handler(msg, process_delete_from_favourites)
+
     else:
-        bot.send_message(message.chat.id, "Не понял вашей команды, попробуйте другую или введи /help")
+        bot.send_message(message.chat.id, text="⚙️ На такую команду я не запрограммирован... попробуйте другую или введите /help")
 
 
-
-if __name__ == '__main__':
-    bot.polling(none_stop=True)
+bot.polling(none_stop=True)
