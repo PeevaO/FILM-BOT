@@ -1,0 +1,53 @@
+import telebot
+
+
+TOKEN = ''
+bot = telebot.TeleBot(TOKEN)
+
+
+
+@bot.message_handler(commands=["start"])
+def handle_start(message):
+    bot.send_message(message.chat.id, START_MSG)
+
+
+@bot.message_handler(commands=["help"])
+def handle_help(message):
+    bot.send_message(message.chat.id, HELP_MSG)
+
+@bot.message_handler(content_types = ['text'])
+def send_text(message):
+    if message.text.lower() == 'поиск по названию':
+        msg = bot.send_message(message.chat.id, 'Введи название аниме или дорамы, которые хочешь посмотреть')
+        bot.register_next_step_handler(msg,process_title_search)
+    elif message.text.lower() == 'поиск по жанру':
+        msg = bot.send_message(message.chat.id, 'Введи нужные жанры (если их несколько, то укажи их через запятую, без пробелов)')
+        bot.register_next_step_handler(msg, process_genre_search)
+    elif message.text.lower() == 'поиск по актеру':
+        msg = bot.send_message(message.chat.id,'Введи нужных актеров (если их несколько, то укажи их через запятую, без пробелов)')
+        bot.register_next_step_handler(msg, process_actor_search)
+    elif message.text.lower() == 'поиск по году':
+        msg = bot.send_message(message.chat.id, 'Введи нужный год или диапазон годов (если вводишь диапазон, то вводи в формате год-год)')
+        bot.register_next_step_handler(msg, process_year_search)
+    elif message.text.lower() == 'случайный сериал':
+        msg = bot.send_message(message.chat.id, 'Держи случайный сериал, надеюсь, что тебе он понравится \n')
+        #information =
+        bot.send_message(message.chat.id, information)
+    elif message.text.lower() == 'добавить в избранное':
+        msg = bot.send_message(message.chat.id, 'Введи название дорамы, которую хочешь добавить в Избранное')
+        bot.register_next_step_handler(msg, process_add_to_favourites)
+    elif message.text.lower() == 'избранное':
+
+        #information =
+        bot.send_message(message.chat.id, information)
+
+    elif message.text.lower() == 'удалить из избранного':
+        msg = bot.send_message(message.chat.id, 'Введи название сериала, которое хочешь удалить из Избранного:')
+        bot.register_next_step_handler(msg, process_delete_from_favourites)
+    else:
+        bot.send_message(message.chat.id, "Не понял вашей команды, попробуйте другую или введи /help")
+
+
+
+if __name__ == '__main__':
+    bot.polling(none_stop=True)
