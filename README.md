@@ -1,4 +1,4 @@
-<h1 align="center">Telegtam бот DoranimeBot
+<h1 align="center">Telegram бот DoranimeBot
 <img src="https://media.tenor.com/9ZsRZ-PXPlwAAAAi/telegram-gif.gif" height="32"/></h1>
 
 Телеграм бот, позволяющий находить дорамы и аниме по различным критериям, а также сохранять произведения в список избранного.
