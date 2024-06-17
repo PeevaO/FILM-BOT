@@ -23,13 +23,6 @@
 Управление функционалом было реализовано при помощи кнопок.
 
 Критерии поиска пользователь задает текстом.
-![photo1718557251](https://github.com/PeevaO/FILM-BOT/assets/144949212/dde96b06-ae59-4266-8595-7af55ce3d042)
-![photo1718557273](https://github.com/PeevaO/FILM-BOT/assets/144949212/f786f4da-48b8-4014-bffd-a2ba35788a24)
-![photo1718557290](https://github.com/PeevaO/FILM-BOT/assets/144949212/0661be5d-a557-4a6a-8780-654024e79016)
-![photo1718557376](https://github.com/PeevaO/FILM-BOT/assets/144949212/ddfe5546-1a18-498a-b45e-fa7d623f34f6)
-![photo1718557427](https://github.com/PeevaO/FILM-BOT/assets/144949212/e2e61d28-bf51-40b9-9035-ddc36ec79b81)
-![photo1718557461](https://github.com/PeevaO/FILM-BOT/assets/144949212/5b456a25-e75d-4bea-b01f-813ec36c309c)
-![photo1718557484](https://github.com/PeevaO/FILM-BOT/assets/144949212/f6d9ac2d-e2e4-403d-b94f-86c113014202)
 
 
 # Реализация функций бота:  
