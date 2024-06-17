@@ -1,3 +1,4 @@
+"""import moduls"""
 import telebot
 from telebot import types
 import sqlite3
@@ -8,18 +9,27 @@ import Api
 
 class DoranimeBot:
     def __init__(self, token: str):
+        """initialization
+
+        :param token: TeleBot token
+        """
         self.bot = telebot.TeleBot(token)
         self.user_data = {}
         self.conn = sqlite3.connect('Serials.db', check_same_thread=False)
         self.create_tables()
         self.load_user_data()
 
-        # Настройка команд
+        """Setting up commands"""
         self.bot.message_handler(commands=['start'])(self.start)
         self.bot.message_handler(commands=['help'])(self.help)
         self.bot.message_handler(content_types=['text'])(self.func)
 
     def start(self, message):
+        """
+
+        :param message: user's message
+        :return: response to the user
+        """
         chat_id = message.chat.id
         if chat_id not in self.user_data:
             self.user_data[chat_id] = {'doramas': [], 'anime': []}
@@ -34,8 +44,12 @@ class DoranimeBot:
     def help(self, message):
         self.bot.send_message(message.chat.id, GeneralMessages.HELP_MSG)
 
-#основное меню
     def func(self, message):
+        """Main menu
+
+        :param message: user's message
+        :return: response to the user
+        """
         if (message.text == "❓ Что я умею?"):
             self.bot.send_message(message.chat.id, GeneralMessages.HELP_MSG)
         elif (message.text == "🌸 Аниме"):
@@ -173,8 +187,12 @@ class DoranimeBot:
                 self.user_data[chat_id] = {'doramas': [], 'anime': []}
             self.user_data[chat_id]['anime'].append(Anime(name, comments))
 
-#добаление сериала в базу данных
     def add_serial(self, message):
+        """adding a dorama or anime to the database
+
+        :param message: dorama or anime
+        :return:
+        """
         chat_id = message.chat.id
         serial = message.text
         msg = self.bot.reply_to(message, 'Введите название сериала, который вы хотите добавить')
@@ -211,8 +229,12 @@ class DoranimeBot:
                            (chat_id, name, comment))
         self.conn.commit()
 
-#удаление сериала из базы данных
     def delete_serial(self, message):
+        """deleting a dorama or anime from the database
+
+        :param message: dorama or anime
+        :return:
+        """
         chat_id = message.chat.id
         serial = message.text
         msg = self.bot.reply_to(message, 'Введите название сериала, который нужно удалить:')
@@ -232,8 +254,12 @@ class DoranimeBot:
             cursor.execute('DELETE FROM anime WHERE chat_id = ? AND name = ?', (chat_id, name))
         self.conn.commit()
 
-#вывод списка избранного
     def list_serial(self, message):
+        """displaying a list of favorites
+
+        :param message:
+        :return:
+        """
         chat_id = message.chat.id
         serial = message.text
         valid_serials = []
