@@ -1,13 +1,38 @@
+"""@package docstring
+Documentation for this module.
+
+Телеграм бот реализован с помощью библиотеки telebot, позволяющей работать с Telegram Bot API.
+Для работы с базой данных используется библиотека sqlite3, позволяющая формировать запросы к облегченной базе данных.
+
+Работа бота осуществляется классом DoranimeBot и сопутствующими функциями для работы с базой данных, для обращения к API Кинопоиска.
+Для удобства использования добавлены кнопки в основное меню.
+Запуск бота осуществляется с помощью файла "Main.py".
+"""
+# @section author_doxygen_example Author(s)
+#Created by:
+# * Pustovalova Sofya Alekseevna \n
+# * Zavyalova Polina Igorevna \n
+# * Peeva Olesya Romanovna \n
+# * Kramarenko Yuri Andreevich \n
+#on 16/06/2024.
+
+# Imports
 import requests
 import textwrap
 
 
-API = ''  # введите свой токен (ссылка для получения: https://kinopoisk.dev/)
+API = 'EXJ45X6-NF9MGN7-JA5CJJQ-M14FMA9'  # введите свой токен (ссылка для получения: https://kinopoisk.dev/)
 URL = 'https://api.kinopoisk.dev/v1.4/'
 
 
-# функция для поиска по жанру
 def genre_search(message, type):
+    """function for searching by genre.
+
+    :param message: user's message
+    :param type: anime or dorama
+    :return: result (anime or dorama)
+    """
+
     message = ''.join(message.split())
     genres = message.split(",")
 
@@ -41,8 +66,12 @@ def genre_search(message, type):
     return result
 
 
-# функция для поиска по жанру
 def title_search(message):
+    """function for searching by name.
+
+    :param message: user's message
+    :return: result (anime or dorama)
+    """
     title = message
 
     headers = {'X-API-KEY': API}
@@ -63,8 +92,12 @@ def title_search(message):
     return result
 
 
-# функция для поиска по жанру
 def actor_search(message):
+    """function for searching by actor.
+
+    :param message: user's message
+    :return: result (anime or dorama)
+    """
     result = ''
     message.replace(', ', ',')
     actor = message.split(",")
@@ -102,8 +135,13 @@ def actor_search(message):
     return result
 
 
-# функция для поиска по жанру
 def year_search(message, type):
+    """function for searching by years.
+
+        :param message: user's message
+        :param type: anime or dorama
+        :return: result (anime or dorama)
+        """
     year = message.replace(' ', '')
 
     headers = {'X-API-KEY': API}
@@ -137,8 +175,12 @@ def year_search(message, type):
     return result
 
 
-# функция для поиска по жанру
 def random_dorama(type):
+    """function for searching random dorama.
+
+        :param type: anime or dorama
+        :return: result (anime or dorama)
+        """
     headers = {'X-API-KEY': API}
 
     if type == 'аниме':
